@@ -1,8 +1,11 @@
 package ru.netology.manager;
 
 import org.junit.jupiter.api.Test;
+import ru.netology.comparator.TicketByFlightTimeAscComparator;
 import ru.netology.domain.Ticket;
 import ru.netology.repository.Repository;
+
+import java.util.Comparator;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -17,9 +20,9 @@ class ManagerTest {
             new Ticket(7, 17, "VLC", "LIS", 90),
             new Ticket(8, 179, "HEL", "TKU", 35),
             new Ticket(9, 203, "HEL", "TKU", 35),
-            new Ticket(10, 179,"HEL", "TKU", 35),
+            new Ticket(10, 179, "HEL", "TKU", 35),
             new Ticket(11, 32, "HEL", "RIX", 65),
-            new Ticket(12,74, "HEL", "RIX", 65),
+            new Ticket(12, 74, "HEL", "RIX", 65),
     };
 
     @Test
@@ -85,6 +88,54 @@ class ManagerTest {
 
         Ticket[] actual = manager.findAll("HEL", "TKU");
         Ticket[] expected = {testTickets[7], testTickets[9], testTickets[8]};
+        assertArrayEquals(expected, actual);
+    }
+
+    @Test
+    public void saveAndFindAllByFlightTimeAsc() {
+        Repository repo = new Repository();
+        Manager manager = new Manager(repo);
+        TicketByFlightTimeAscComparator comparator = new TicketByFlightTimeAscComparator();
+
+        manager.add(testTickets[0]);
+        manager.add(testTickets[1]);
+        manager.add(testTickets[2]);
+        manager.add(testTickets[3]);
+        manager.add(testTickets[4]);
+        manager.add(testTickets[5]);
+        manager.add(testTickets[6]);
+        manager.add(testTickets[7]);
+        manager.add(testTickets[8]);
+        manager.add(testTickets[9]);
+        manager.add(testTickets[10]);
+        manager.add(testTickets[11]);
+
+        Ticket[] actual = manager.findAll("HEL", "RIX", comparator);
+        Ticket[] expected = {testTickets[0], testTickets[5], testTickets[10], testTickets[11]};
+        assertArrayEquals(expected, actual);
+    }
+
+    @Test
+    public void saveAndFindAllNullByFlightTimeAsc() {
+        Repository repo = new Repository();
+        Manager manager = new Manager(repo);
+        TicketByFlightTimeAscComparator comparator = new TicketByFlightTimeAscComparator();
+
+        manager.add(testTickets[0]);
+        manager.add(testTickets[1]);
+        manager.add(testTickets[2]);
+        manager.add(testTickets[3]);
+        manager.add(testTickets[4]);
+        manager.add(testTickets[5]);
+        manager.add(testTickets[6]);
+        manager.add(testTickets[7]);
+        manager.add(testTickets[8]);
+        manager.add(testTickets[9]);
+        manager.add(testTickets[10]);
+        manager.add(testTickets[11]);
+
+        Ticket[] actual = manager.findAll("HEL", "MOW", comparator);
+        Ticket[] expected = {};
         assertArrayEquals(expected, actual);
     }
 
